@@ -10,6 +10,7 @@ import dayjs from 'dayjs';
 import i18n from '~/config/i18n';
 import thm from '~/config/theme';
 import {wpx, hpx} from '~/utils/responsive';
+import {API_URL, API_TOKEN} from '@env';
 
 const StyledView = styled.View`
   background-color: ${({theme}) => theme.colors.main};
@@ -39,6 +40,7 @@ function App(): JSX.Element {
             {i18n.t('hello')} {withTime12HourFormat}{' '}
             {i18n.l('currency', 1990.99)}
             {i18n.numberToCurrency(1234567890.5)}
+            {API_URL} {API_TOKEN}
           </StyledText>
           <StyledImage source={require('~/assets/images/colmena.webp')} />
         </StyledView>
