@@ -4,21 +4,27 @@
  */
 
 import React from 'react';
-import {Image, SafeAreaView, StatusBar} from 'react-native';
+import {SafeAreaView, StatusBar} from 'react-native';
 import styled, {ThemeProvider} from 'styled-components/native';
 import dayjs from 'dayjs';
 import i18n from '~/config/i18n';
 import thm from '~/config/theme';
+import {wpx, hpx} from '~/utils/responsive';
 
 const StyledView = styled.View`
   background-color: ${({theme}) => theme.colors.main};
-  padding: 10px 10px;
+  padding: ${hpx('10%')} ${wpx('10%')};
 `;
 
 const StyledText = styled.Text`
   color: #fff;
   font-family: ${({theme}) => theme.fonts.BOLD};
-  font-size: 18px;
+  font-size: ${hpx('2%')};
+  margin-bottom: ${hpx('5%')};
+`;
+
+const StyledImage = styled.Image`
+  width: ${wpx('80%')};
 `;
 
 function App(): JSX.Element {
@@ -32,8 +38,9 @@ function App(): JSX.Element {
           <StyledText>
             {i18n.t('hello')} {withTime12HourFormat}{' '}
             {i18n.l('currency', 1990.99)}
+            {i18n.numberToCurrency(1234567890.5)}
           </StyledText>
-          <Image source={require('~/assets/images/colmena.webp')} />
+          <StyledImage source={require('~/assets/images/colmena.webp')} />
         </StyledView>
       </SafeAreaView>
     </ThemeProvider>
