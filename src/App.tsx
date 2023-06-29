@@ -1,12 +1,10 @@
 /**
- * Sample React Native App
- * https://github.com/facebook/react-native
  *
  * @format
  */
 
 import React from 'react';
-import {SafeAreaView, StatusBar} from 'react-native';
+import {Image, SafeAreaView, StatusBar} from 'react-native';
 import styled, {ThemeProvider} from 'styled-components/native';
 import thm from '~/config/theme';
 
@@ -26,6 +24,7 @@ function App(): JSX.Element {
         <StatusBar barStyle={'dark-content'} />
         <StyledView>
           <StyledText>Hello World!</StyledText>
+          <Image source={require('~/assets/images/colmena.webp')} />
         </StyledView>
       </SafeAreaView>
     </ThemeProvider>
