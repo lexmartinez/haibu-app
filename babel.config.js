@@ -7,6 +7,7 @@ module.exports = {
       {
         alias: {
           '~': './src',
+          '~axios': './src/utils/axios',
         },
       },
     ],
