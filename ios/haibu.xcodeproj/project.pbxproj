@@ -14,6 +14,10 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		4716E1999AC243DAAEE2F1C3 /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CC09C697836C4006B1F141A1 /* Montserrat-Bold.ttf */; };
 		54410A9F1B3B448AA664334A /* Montserrat-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D1F4F6755C154A8B8F455CCE /* Montserrat-Medium.ttf */; };
+		719F84492A4E827500E72118 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 719F84452A4E827400E72118 /* MaterialIcons.ttf */; };
+		719F844A2A4E827500E72118 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 719F84462A4E827400E72118 /* FontAwesome.ttf */; };
+		719F844B2A4E827500E72118 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 719F84472A4E827400E72118 /* MaterialCommunityIcons.ttf */; };
+		719F844C2A4E827500E72118 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 719F84482A4E827400E72118 /* Feather.ttf */; };
 		7699B88040F8A987B510C191 /* libPods-haibu-haibuTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-haibu-haibuTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		A14B8102065B4EA292701020 /* Montserrat-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D08AFFDB047E480DB73FD458 /* Montserrat-SemiBold.ttf */; };
@@ -45,6 +49,10 @@
 		5709B34CF0A7D63546082F79 /* Pods-haibu.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-haibu.release.xcconfig"; path = "Target Support Files/Pods-haibu/Pods-haibu.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-haibu-haibuTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-haibu-haibuTests.debug.xcconfig"; path = "Target Support Files/Pods-haibu-haibuTests/Pods-haibu-haibuTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-haibu.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-haibu.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		719F84452A4E827400E72118 /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
+		719F84462A4E827400E72118 /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
+		719F84472A4E827400E72118 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
+		719F84482A4E827400E72118 /* Feather.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = haibu/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-haibu-haibuTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-haibu-haibuTests.release.xcconfig"; path = "Target Support Files/Pods-haibu-haibuTests/Pods-haibu-haibuTests.release.xcconfig"; sourceTree = "<group>"; };
 		CC09C697836C4006B1F141A1 /* Montserrat-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Bold.ttf"; path = "../src/assets/fonts/Montserrat-Bold.ttf"; sourceTree = "<group>"; };
@@ -160,6 +168,10 @@
 		D8EF4A14875F4D9BB8AAE886 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				719F84482A4E827400E72118 /* Feather.ttf */,
+				719F84462A4E827400E72118 /* FontAwesome.ttf */,
+				719F84472A4E827400E72118 /* MaterialCommunityIcons.ttf */,
+				719F84452A4E827400E72118 /* MaterialIcons.ttf */,
 				CC09C697836C4006B1F141A1 /* Montserrat-Bold.ttf */,
 				D1F4F6755C154A8B8F455CCE /* Montserrat-Medium.ttf */,
 				F3B5AD70B2EA40399065C619 /* Montserrat-Regular.ttf */,
@@ -264,10 +276,14 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				719F844C2A4E827500E72118 /* Feather.ttf in Resources */,
 				4716E1999AC243DAAEE2F1C3 /* Montserrat-Bold.ttf in Resources */,
+				719F844A2A4E827500E72118 /* FontAwesome.ttf in Resources */,
 				54410A9F1B3B448AA664334A /* Montserrat-Medium.ttf in Resources */,
 				F66B42F94F614687B2EE23DF /* Montserrat-Regular.ttf in Resources */,
 				A14B8102065B4EA292701020 /* Montserrat-SemiBold.ttf in Resources */,
+				719F844B2A4E827500E72118 /* MaterialCommunityIcons.ttf in Resources */,
+				719F84492A4E827500E72118 /* MaterialIcons.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

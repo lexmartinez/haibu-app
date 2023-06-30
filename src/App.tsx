@@ -11,6 +11,7 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/Feather';
 import styled, {ThemeProvider} from 'styled-components/native';
 import {Provider} from 'react-redux';
 import {NavigationContainer} from '@react-navigation/native';
@@ -24,10 +25,7 @@ import axios from '~axios';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {
   AnimatedTabBarNavigator,
-  DotSize, // optional
-  TabElementDisplayOptions, // optional
-  TabButtonLayout, // optional
-  IAppearanceOptions, // optional
+  DotSize,
 } from 'react-native-animated-nav-tab-bar';
 
 const Tab = AnimatedTabBarNavigator();
@@ -108,6 +106,16 @@ function HomeStack() {
   );
 }
 
+const TabBarIcon = (props: any) => {
+  return (
+    <Icon
+      name={props.name}
+      size={props.size ? props.size : 24}
+      color={props.tintColor}
+    />
+  );
+};
+
 function App() {
   return (
     <Provider store={store}>
@@ -124,9 +132,37 @@ function App() {
               floating: true,
               dotSize: DotSize.SMALL,
             }}>
-            <Tab.Screen name="Home" component={HomeStack} />
-            <Tab.Screen name="Settings" component={SettingsScreen} />
-            <Tab.Screen name="Settings2" component={SettingsScreen} />
+            <Tab.Screen
+              name="Home"
+              component={HomeStack}
+              options={{
+                tabBarIcon: ({focused, color}) => (
+                  <TabBarIcon focused={focused} tintColor={color} name="home" />
+                ),
+              }}
+            />
+            <Tab.Screen
+              name="Dashboard"
+              component={SettingsScreen}
+              options={{
+                tabBarIcon: ({focused, color}) => (
+                  <TabBarIcon
+                    focused={focused}
+                    tintColor={color}
+                    name="pie-chart"
+                  />
+                ),
+              }}
+            />
+            <Tab.Screen
+              name="Settings"
+              component={SettingsScreen}
+              options={{
+                tabBarIcon: ({focused, color}) => (
+                  <TabBarIcon focused={focused} tintColor={color} name="user" />
+                ),
+              }}
+            />
           </Tab.Navigator>
         </NavigationContainer>
       </ThemeProvider>
