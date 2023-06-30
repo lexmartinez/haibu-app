@@ -1,17 +1,12 @@
+/* eslint-disable react/no-unstable-nested-components */
 /**
  *
  * @format
  */
 
 import React, {useEffect} from 'react';
-import {
-  SafeAreaView,
-  StatusBar,
-  View,
-  Text,
-  TouchableOpacity,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/Feather';
+import {SafeAreaView, StatusBar} from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import styled, {ThemeProvider} from 'styled-components/native';
 import {Provider} from 'react-redux';
 import {NavigationContainer} from '@react-navigation/native';
@@ -31,26 +26,8 @@ import {
 const Tab = AnimatedTabBarNavigator();
 const Stack = createNativeStackNavigator();
 
-function HomeScreen({navigation}: any): JSX.Element {
-  return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <TouchableOpacity onPress={() => navigation.navigate('Main')}>
-        <Text>Home Screen</Text>
-      </TouchableOpacity>
-    </View>
-  );
-}
-
-function SettingsScreen(): JSX.Element {
-  return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Text>Settings Screen</Text>
-    </View>
-  );
-}
-
 const StyledView = styled.View`
-  background-color: ${({theme}) => theme.colors.main};
+  background-color: ${({theme}) => theme.colors.mirage};
   padding: ${hpx('10%')} ${wpx('10%')};
 `;
 
@@ -79,8 +56,8 @@ function MainScreen(): JSX.Element {
       });
   }, []);
   return (
-    <SafeAreaView>
-      <StatusBar barStyle={'dark-content'} />
+    <SafeAreaView style={{backgroundColor: thm.colors.codGray}}>
+      <StatusBar barStyle={'light-content'} />
       <StyledView>
         <Message />
         <StyledText>
@@ -95,13 +72,8 @@ function MainScreen(): JSX.Element {
 
 function HomeStack() {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="HomeS" component={HomeScreen} />
-      <Stack.Screen
-        name="Main"
-        component={MainScreen}
-        options={{title: 'Overview'}}
-      />
+    <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name="Main" component={MainScreen} />
     </Stack.Navigator>
   );
 }
@@ -123,43 +95,68 @@ function App() {
         <NavigationContainer>
           <Tab.Navigator
             tabBarOptions={{
-              activeTintColor: '#ffffff',
-              inactiveTintColor: '#223322',
-              activeBackgroundColor: 'red',
+              activeTintColor: thm.colors.kelp,
+              inactiveTintColor: thm.colors.gray,
+              activeBackgroundColor: thm.colors.lemonChrome,
+              labelStyle: {
+                fontFamily: thm.fonts.SEMIBOLD,
+              },
             }}
             appearance={{
               shadow: true,
               floating: true,
-              dotSize: DotSize.SMALL,
+              dotSize: DotSize.MEDIUM,
+              tabBarBackground: thm.colors.emperor,
             }}>
             <Tab.Screen
               name="Home"
               component={HomeStack}
               options={{
-                tabBarIcon: ({focused, color}) => (
-                  <TabBarIcon focused={focused} tintColor={color} name="home" />
-                ),
-              }}
-            />
-            <Tab.Screen
-              name="Dashboard"
-              component={SettingsScreen}
-              options={{
-                tabBarIcon: ({focused, color}) => (
+                tabBarIcon: ({focused, color}: any) => (
                   <TabBarIcon
                     focused={focused}
                     tintColor={color}
-                    name="pie-chart"
+                    name="home-variant-outline"
                   />
                 ),
               }}
             />
             <Tab.Screen
-              name="Settings"
-              component={SettingsScreen}
+              name="Ahorro"
+              component={HomeStack}
               options={{
-                tabBarIcon: ({focused, color}) => (
-                  <TabBarIcon focused={focused} tintColor={color} name="user" />
+                tabBarIcon: ({focused, color}: any) => (
+                  <TabBarIcon
+                    focused={focused}
+                    tintColor={color}
+                    name="piggy-bank-outline"
+                  />
+                ),
+              }}
+            />
+            <Tab.Screen
+              name="Balance"
+              component={HomeStack}
+              options={{
+                tabBarIcon: ({focused, color}: any) => (
+                  <TabBarIcon
+                    focused={focused}
+                    tintColor={color}
+                    name="chart-pie"
+                  />
+                ),
+              }}
+            />
+            <Tab.Screen
+              name="Perfil"
+              component={HomeStack}
+              options={{
+                tabBarIcon: ({focused, color}: any) => (
+                  <TabBarIcon
+                    focused={focused}
+                    tintColor={color}
+                    name="account-outline"
+                  />
                 ),
               }}
             />
