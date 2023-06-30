@@ -22,9 +22,15 @@ import {store} from '~/store';
 import Message from '~/components/Message';
 import axios from '~axios';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {
+  AnimatedTabBarNavigator,
+  DotSize, // optional
+  TabElementDisplayOptions, // optional
+  TabButtonLayout, // optional
+  IAppearanceOptions, // optional
+} from 'react-native-animated-nav-tab-bar';
 
-const Tab = createBottomTabNavigator();
+const Tab = AnimatedTabBarNavigator();
 const Stack = createNativeStackNavigator();
 
 function HomeScreen({navigation}: any): JSX.Element {
@@ -107,9 +113,20 @@ function App() {
     <Provider store={store}>
       <ThemeProvider theme={thm}>
         <NavigationContainer>
-          <Tab.Navigator>
+          <Tab.Navigator
+            tabBarOptions={{
+              activeTintColor: '#ffffff',
+              inactiveTintColor: '#223322',
+              activeBackgroundColor: 'red',
+            }}
+            appearance={{
+              shadow: true,
+              floating: true,
+              dotSize: DotSize.SMALL,
+            }}>
             <Tab.Screen name="Home" component={HomeStack} />
             <Tab.Screen name="Settings" component={SettingsScreen} />
+            <Tab.Screen name="Settings2" component={SettingsScreen} />
           </Tab.Navigator>
         </NavigationContainer>
       </ThemeProvider>
