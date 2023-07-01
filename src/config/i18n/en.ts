@@ -1,3 +1,10 @@
 export default {
-  hello: 'Hello World!',
+  global: {
+    nav: {
+      profile: 'Profile',
+      home: 'Home',
+      balance: 'Balance',
+      savings: 'Savings',
+    },
+  },
 };
