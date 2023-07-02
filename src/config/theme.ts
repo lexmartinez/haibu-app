@@ -1,4 +1,5 @@
 const colors = {
+  almostBlack: '#090909',
   codGray: '#141414',
   mineShaft: '#222222',
   emperor: '#2F2F2F',

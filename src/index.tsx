@@ -4,20 +4,21 @@
  * @format
  */
 
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {StatusBar} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import styled, {ThemeProvider} from 'styled-components/native';
 import {Provider} from 'react-redux';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {useAsyncStorage} from '@react-native-async-storage/async-storage';
 import {
   AnimatedTabBarNavigator,
   DotSize,
 } from 'react-native-animated-nav-tab-bar';
 import i18n from '~/config/i18n';
 import thm from '~/config/theme';
-import Screens from '~/config/screens';
+import {screen, storage} from '~/config/constants';
 import {wpx, hpx} from '~/utils/responsive';
 import {store} from '~/store';
 
@@ -35,7 +36,7 @@ const StyledView = styled.SafeAreaView`
 function HomeStack() {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen name={Screens.HOME} component={StyledView} />
+      <Stack.Screen name={screen.HOME} component={StyledView} />
     </Stack.Navigator>
   );
 }
@@ -43,7 +44,8 @@ function HomeStack() {
 function ProfileStack() {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen name={Screens.PROFILE} component={ProfileScreen} />
+      <Stack.Screen name={screen.PROFILE} component={ProfileScreen} />
+      <Stack.Screen name={screen.CHANGE_PASSWORD} component={StyledView} />
     </Stack.Navigator>
   );
 }
@@ -59,6 +61,19 @@ const TabBarIcon = (props: any) => {
 };
 
 function Haibu() {
+  const [_, setLocale] = useState<string>(i18n.locale);
+  const {getItem: getLocale} = useAsyncStorage(storage.LOCALE);
+
+  const readLocaleFromStorage = async () => {
+    const item = await getLocale();
+    setLocale(item || 'es');
+  };
+
+  useEffect(() => {
+    readLocaleFromStorage();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <Provider store={store}>
       <ThemeProvider theme={thm}>
@@ -80,7 +95,7 @@ function Haibu() {
               tabBarBackground: thm.colors.emperor,
             }}>
             <Tab.Screen
-              name={Screens._HOME}
+              name={screen._HOME}
               component={HomeStack}
               options={{
                 tabBarLabel: i18n.t('global.nav.home'),
@@ -94,7 +109,7 @@ function Haibu() {
               }}
             />
             <Tab.Screen
-              name={Screens._SAVINGS}
+              name={screen._SAVINGS}
               component={HomeStack}
               options={{
                 tabBarLabel: i18n.t('global.nav.savings'),
@@ -108,7 +123,7 @@ function Haibu() {
               }}
             />
             <Tab.Screen
-              name={Screens._BALANCE}
+              name={screen._BALANCE}
               component={HomeStack}
               options={{
                 tabBarLabel: i18n.t('global.nav.balance'),
@@ -122,7 +137,7 @@ function Haibu() {
               }}
             />
             <Tab.Screen
-              name={Screens._PROFILE}
+              name={screen._PROFILE}
               component={ProfileStack}
               options={{
                 tabBarLabel: i18n.t('global.nav.profile'),
