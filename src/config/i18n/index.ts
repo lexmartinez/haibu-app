@@ -26,7 +26,7 @@ AsyncStorage.getItem(storage.LOCALE)
       AsyncStorage.setItem(storage.LOCALE, localizedLocale);
     }
   })
-  .catch((_: any) => {
+  .catch((_) => {
     i18n.locale = localizedLocale;
   });
 

@@ -5,10 +5,10 @@
  */
 
 import React, {useState, useEffect} from 'react';
-import {StatusBar} from 'react-native';
+import {StatusBar, Text} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import styled, {ThemeProvider} from 'styled-components/native';
-import {Provider} from 'react-redux';
+import {Provider, useSelector, useDispatch} from 'react-redux';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useAsyncStorage} from '@react-native-async-storage/async-storage';
@@ -18,25 +18,44 @@ import {
 } from 'react-native-animated-nav-tab-bar';
 import i18n from '~/config/i18n';
 import thm from '~/config/theme';
+import {TOKEN_SELECTOR} from '~/store/selectors/user';
 import {screen, storage} from '~/config/constants';
 import {wpx, hpx} from '~/utils/responsive';
 import {store} from '~/store';
+import {setUserAuthData as setAuthAction} from '~/store/user';
 
 import ProfileScreen from '~screens/Profile';
+import LoginScreen from '~screens/Login';
+import SignupScreen from '~screens/Signup';
+import HomeScreen from '~screens/Home';
+import PocketsScreen from '~screens/Pockets';
+import PocketDetailScreen from '~screens/PocketDetail'
 
 const Tab = AnimatedTabBarNavigator();
 const Stack = createNativeStackNavigator();
 
+(Text as any).defaultProps = (Text as any).defaultProps || {};
+(Text as any).defaultProps.allowFontScaling = false;
+
 const StyledView = styled.SafeAreaView`
   padding: ${hpx('10%')} ${wpx('10%')};
   height: ${hpx('100%')};
-  background-color: ${({theme}) => theme.colors.codGray};
+  background-color: ${({theme}) => theme.colors.white};
 `;
 
 function HomeStack() {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen name={screen.HOME} component={StyledView} />
+      <Stack.Screen name={screen.HOME} component={HomeScreen} />
+    </Stack.Navigator>
+  );
+}
+
+function SavingsStack() {
+  return (
+    <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name={screen.SAVINGS} component={PocketsScreen} />
+      <Stack.Screen name={screen.POCKET_DETAIL} component={PocketDetailScreen} />
     </Stack.Navigator>
   );
 }
@@ -50,27 +69,151 @@ function ProfileStack() {
   );
 }
 
-const TabBarIcon = (props: any) => {
+function LoginStack() {
+  return (
+    <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name={screen.LOGIN} component={LoginScreen} />
+      <Stack.Screen
+        name={screen.SIGNUP}
+        component={SignupScreen}
+        options={{presentation: 'modal'}}
+      />
+    </Stack.Navigator>
+  );
+}
+
+interface TabBarIconOptions {
+  focused: boolean;
+  color: string;
+}
+
+const TabBarIcon = (props: {
+  tintColor: string;
+  name: string;
+  size?: number;
+  focused: boolean;
+}) => {
   return (
     <Icon
       name={props.name}
-      size={props.size ? props.size : 24}
+      size={props.size ? props.size : 28}
       color={props.tintColor}
     />
   );
 };
 
+const MainNavigator = ({user}: any) => {
+  const authToken = useSelector(TOKEN_SELECTOR);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!!user && !authToken) {
+      try {
+        dispatch(setAuthAction(JSON.parse(user)));
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
+
+  if (!authToken) {
+    return <LoginStack />;
+  }
+
+  return (
+    <Tab.Navigator
+      tabBarOptions={{
+        activeTintColor: thm.colors.emperor,
+        inactiveTintColor: thm.colors.gray,
+        activeBackgroundColor: thm.colors.saffron,
+        labelStyle: {
+          fontFamily: thm.fonts.SEMIBOLD,
+        },
+      }}
+      appearance={{
+        shadow: true,
+        floating: true,
+        dotSize: DotSize.LARGE,
+        tabBarBackground: thm.colors.emperor,
+      }}>
+      <Tab.Screen
+        name={screen._HOME}
+        component={HomeStack}
+        options={{
+          tabBarLabel: i18n.t('global.nav.home'),
+          tabBarIcon: ({focused, color}: TabBarIconOptions) => (
+            <TabBarIcon
+              focused={focused}
+              tintColor={color}
+              name={`home-variant${!focused ? '-outline' : ''}`}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name={screen._SAVINGS}
+        component={SavingsStack}
+        options={{
+          tabBarLabel: i18n.t('global.nav.savings'),
+          tabBarIcon: ({focused, color}: TabBarIconOptions) => (
+            <TabBarIcon
+              focused={focused}
+              tintColor={color}
+              name={`piggy-bank${!focused ? '-outline' : ''}`}
+            />
+          ),
+        }}
+      />
+      {/*<Tab.Screen
+        name={screen._BUDGET}
+        component={HomeStack}
+        options={{
+          tabBarLabel: i18n.t('global.nav.budget'),
+          tabBarIcon: ({focused, color}: TabBarIconOptions) => (
+            <TabBarIcon
+              focused={focused}
+              tintColor={color}
+              name={`wallet${!focused ? '-outline' : ''}`}
+            />
+          ),
+        }}
+      />*/}
+      <Tab.Screen
+        name={screen._PROFILE}
+        component={ProfileStack}
+        options={{
+          tabBarLabel: i18n.t('global.nav.profile'),
+          tabBarIcon: ({focused, color}: TabBarIconOptions) => (
+            <TabBarIcon
+              focused={focused}
+              tintColor={color}
+              name={`account${!focused ? '-outline' : ''}`}
+            />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  );
+};
+
 function Haibu() {
   const [_, setLocale] = useState<string>(i18n.locale);
+  const [userData, setUserData] = useState<string>();
   const {getItem: getLocale} = useAsyncStorage(storage.LOCALE);
+  const {getItem: getUserData} = useAsyncStorage(storage.USER);
 
-  const readLocaleFromStorage = async () => {
+  const readDataFromStorage = async () => {
     const item = await getLocale();
     setLocale(item || 'es');
+    const user = await getUserData();
+    if (user) {
+      setUserData(user);
+    }
   };
 
   useEffect(() => {
-    readLocaleFromStorage();
+    readDataFromStorage();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -79,78 +222,7 @@ function Haibu() {
       <ThemeProvider theme={thm}>
         <StatusBar barStyle={'light-content'} />
         <NavigationContainer>
-          <Tab.Navigator
-            tabBarOptions={{
-              activeTintColor: thm.colors.wildSand,
-              inactiveTintColor: thm.colors.gray,
-              activeBackgroundColor: thm.colors.pomegranate,
-              labelStyle: {
-                fontFamily: thm.fonts.SEMIBOLD,
-              },
-            }}
-            appearance={{
-              shadow: true,
-              floating: true,
-              dotSize: DotSize.MEDIUM,
-              tabBarBackground: thm.colors.emperor,
-            }}>
-            <Tab.Screen
-              name={screen._HOME}
-              component={HomeStack}
-              options={{
-                tabBarLabel: i18n.t('global.nav.home'),
-                tabBarIcon: ({focused, color}: any) => (
-                  <TabBarIcon
-                    focused={focused}
-                    tintColor={color}
-                    name={'home-variant-outline'}
-                  />
-                ),
-              }}
-            />
-            <Tab.Screen
-              name={screen._SAVINGS}
-              component={HomeStack}
-              options={{
-                tabBarLabel: i18n.t('global.nav.savings'),
-                tabBarIcon: ({focused, color}: any) => (
-                  <TabBarIcon
-                    focused={focused}
-                    tintColor={color}
-                    name={'piggy-bank-outline'}
-                  />
-                ),
-              }}
-            />
-            <Tab.Screen
-              name={screen._BALANCE}
-              component={HomeStack}
-              options={{
-                tabBarLabel: i18n.t('global.nav.balance'),
-                tabBarIcon: ({focused, color}: any) => (
-                  <TabBarIcon
-                    focused={focused}
-                    tintColor={color}
-                    name={'chart-line'}
-                  />
-                ),
-              }}
-            />
-            <Tab.Screen
-              name={screen._PROFILE}
-              component={ProfileStack}
-              options={{
-                tabBarLabel: i18n.t('global.nav.profile'),
-                tabBarIcon: ({focused, color}: any) => (
-                  <TabBarIcon
-                    focused={focused}
-                    tintColor={color}
-                    name={'account-outline'}
-                  />
-                ),
-              }}
-            />
-          </Tab.Navigator>
+          <MainNavigator user={userData} />
         </NavigationContainer>
       </ThemeProvider>
     </Provider>

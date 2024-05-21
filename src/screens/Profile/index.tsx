@@ -8,6 +8,8 @@ import {storage, screen, appName} from '~/config/constants';
 import currencies from '~/config/currencies';
 import i18n from '~/config/i18n';
 import {setCurrency as setCurrencyAction} from '~/store/user';
+import useAuthService from '~/services/auth';
+import {USER_SELECTOR} from '~/store/selectors/user';
 import {
   ScreenContainer,
   Title,
@@ -17,22 +19,24 @@ import {
   SectionTitle,
   SectionItem,
   ItemText,
+  Spacer,
 } from './styles';
 
-import {Icon, LocaleModal, CurrencyModal} from './modal';
+import {LocaleModal, CurrencyModal} from './modal';
+import {ProfileProps} from './typings';
+import {Icon} from '~/components/Icon';
 
 const locales = {
   es: 'Español',
   en: 'English',
 } as any;
 
-const Profile = (props: any) => {
+const Profile = (props: ProfileProps) => {
   const {
-    email = 'michael.lawson@reqres.in',
-    first_name = 'Michael J',
-    last_name = 'Lawson',
-    currency,
-  } = useSelector((state: any) => state.user);
+    email = '',
+    fullName = '',
+    currency = '',
+  }: any = useSelector(USER_SELECTOR);
 
   const {navigation} = props;
   const theme = useTheme();
@@ -40,11 +44,10 @@ const Profile = (props: any) => {
   const [locale, setLocale] = useState<string>(i18n.locale);
   const [localeModal, setLocaleModal] = useState<boolean>(false);
   const [currencyModal, setCurrencyModal] = useState<boolean>(false);
+  const authService = useAuthService();
 
   const {getItem: getLocaleStorage, setItem: setLocaleStorage} =
     useAsyncStorage(storage.LOCALE);
-  const {getItem: getCurrencyStorage, setItem: setCurrencyStorage} =
-    useAsyncStorage(storage.CURRENCY);
 
   const {navigate = () => {}} = {...navigation};
 
@@ -53,17 +56,11 @@ const Profile = (props: any) => {
     setLocale(item || 'es');
   };
 
-  const readCurrencyFromStorage = async () => {
-    const item = await getCurrencyStorage();
-    setCurrency(item || 'cop');
-  };
-
   const toggleLocaleModal = () => setLocaleModal(!localeModal);
   const toggleCurrencyModal = () => setCurrencyModal(!currencyModal);
 
   useEffect(() => {
     readLocaleFromStorage();
-    readCurrencyFromStorage();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -81,8 +78,11 @@ const Profile = (props: any) => {
 
   const setCurrency = (value: string) => {
     dispatch(setCurrencyAction(value));
-    setCurrencyStorage(value);
-    toggleCurrencyModal();
+    setCurrencyModal(false);
+  };
+
+  const onLogout = () => {
+    authService.logout();
   };
 
   useEffect(() => {
@@ -96,21 +96,22 @@ const Profile = (props: any) => {
   return (
     <ScreenContainer>
       <ScrollContainer showsVerticalScrollIndicator={false}>
-        <Title>
-          {first_name} {last_name}
-        </Title>
+        <Title>{fullName}</Title>
         <Subtitle>{email}</Subtitle>
         <Section>
           <SectionTitle>{i18n.t('profile.account')}</SectionTitle>
-          <SectionItem onPress={toggleCurrencyModal}>
-            <Icon name={'currency-usd'} />
-            <ItemText>{i18n.t(`currency.${currency}`)}</ItemText>
-            <Icon name={'chevron-right'} color={theme.colors.romantic} />
+          <SectionItem onPress={toggleCurrencyModal} disabled={true}>
+            <Icon name={'circle-multiple-outline'} />
+            <ItemText>
+              {currency ? i18n.t(`currency.${currency}`) : '---'} (
+              {currency ? currencies[currency].code : '--'})
+            </ItemText>
+            {/*<Icon name={'chevron-right'} color={theme.colors.saffron} />*/}
           </SectionItem>
-          <SectionItem onPress={toggleLocaleModal}>
+          <SectionItem onPress={toggleLocaleModal} activeOpacity={0.8}>
             <Icon name={'translate'} />
             <ItemText>{locales[i18n.locale]}</ItemText>
-            <Icon name={'chevron-right'} color={theme.colors.romantic} />
+            <Icon name={'chevron-right'} color={theme.colors.saffron} />
           </SectionItem>
           {/*<SectionItem>
             <Icon name={'bell-outline'} />
@@ -118,7 +119,9 @@ const Profile = (props: any) => {
   </SectionItem>*/}
         </Section>
         <Section>
-          <SectionItem onPress={() => navigate(screen.CHANGE_PASSWORD)}>
+          <SectionItem
+            onPress={() => navigate(screen.CHANGE_PASSWORD)}
+            activeOpacity={0.8}>
             <Icon name={'lock-open-outline'} />
             <ItemText>{i18n.t('profile.changePassword')}</ItemText>
           </SectionItem>
@@ -126,19 +129,22 @@ const Profile = (props: any) => {
         <Section>
           <SectionTitle>{i18n.t('profile.about')}</SectionTitle>
           <SectionItem
-            onPress={() => Linking.openURL('https://www.nolineal.co/contact')}>
+            onPress={() => Linking.openURL('https://www.nolineal.co/contact')}
+            activeOpacity={0.8}>
             <Icon name={'help-circle-outline'} />
             <ItemText>{i18n.t('profile.help')}</ItemText>
-            <Icon name={'chevron-right'} color={theme.colors.romantic} />
+            <Icon name={'chevron-right'} color={theme.colors.saffron} />
           </SectionItem>
           <SectionItem
-            onPress={() => Linking.openURL('https://www.nolineal.co/projects')}>
+            onPress={() => Linking.openURL('https://www.nolineal.co/projects')}
+            activeOpacity={0.8}>
             <Icon name={'file-certificate-outline'} />
             <ItemText>{i18n.t('profile.legal')}</ItemText>
-            <Icon name={'chevron-right'} color={theme.colors.romantic} />
+            <Icon name={'chevron-right'} color={theme.colors.saffron} />
           </SectionItem>
           <SectionItem
-            onPress={() => Linking.openURL('mailto:comments@haibu.app')}>
+            onPress={() => Linking.openURL('mailto:comments@haibu.app')}
+            activeOpacity={0.8}>
             <Icon name={'comment-outline'} />
             <ItemText>{i18n.t('profile.comments')}</ItemText>
           </SectionItem>
@@ -148,11 +154,12 @@ const Profile = (props: any) => {
   </SectionItem>*/}
         </Section>
         <Section>
-          <SectionItem>
+          <SectionItem onPress={onLogout} activeOpacity={0.8}>
             <Icon name={'logout-variant'} />
             <ItemText>{i18n.t('profile.logout')}</ItemText>
           </SectionItem>
         </Section>
+        <Spacer />
       </ScrollContainer>
       <LocaleModal
         open={localeModal}

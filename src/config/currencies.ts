@@ -11,16 +11,4 @@ export default {
     code: 'EUR',
     symbol: '€',
   },
-  ars: {
-    code: 'ARS',
-    symbol: '$',
-  },
-  mxn: {
-    code: 'MXN',
-    symbol: '$',
-  },
-  gbp: {
-    code: 'GBP',
-    symbol: '£',
-  },
 };
